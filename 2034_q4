@@ -1,0 +1,119 @@
+public class Main {
+  public static void main(String[] args) {
+    System.out.println("2024 FRQ #4");
+
+    int[][] grid1 = {{12, 3, 4, 13, 5},
+                     {11, 21, 2, 14, 16},
+                     {7, 8, 9, 15, 0},
+                     {10, 17, 20, 19, 1},
+                     {18, 22, 30, 25, 6}
+                    };
+      
+    GridPath test1 = new GridPath(grid1);
+    System.out.println(test1);
+
+    // PART A TESTS:
+    System.out.println(test1.getNextLoc(0, 0)); // neighbor to right
+    System.out.println(test1.getNextLoc(1, 3)); // neighbor below
+    System.out.println(test1.getNextLoc(2, 4)); // neighbor below
+    System.out.println(test1.getNextLoc(4, 3)); // neighbor to right
+
+
+    int[][] grid2 = {{12, 30, 40, 25, 5},
+                     {11, 3, 22, 15, 43},
+                     {7, 2, 9, 4, 0},
+                     {8, 33, 18, 6, 1},
+                    };
+    
+    GridPath test2 = new GridPath(grid2);
+
+    // PART B TEST:
+    System.out.println(test2.sumPath(1, 1)); // expected result: 19
+  }
+}
+
+public class Location {
+  private int theRow;
+  private int theCol;
+    
+  public Location(int r, int c) {
+    theRow = r;
+    theCol = c;
+  }
+  
+  public int getRow() { 
+    return theRow; 
+  }
+  
+  public int getCol() { 
+    return theCol; 
+  }
+
+  // added to see results on screen
+  public String toString() {
+    return theRow + " " + theCol;
+  }
+}
+
+import java.util.Arrays;
+
+public class GridPath {
+  private int[][] grid;
+
+  public GridPath(int[][] grid) {
+    this.grid = grid;
+  }
+
+  // PART A (uncomment first)
+  public Location getNextLoc(int row, int col) {
+    boolean hasRight = false;
+    boolean hasBelow = false;
+    int rightValue = Integer.MAX_VALUE;
+    int belowValue = Integer.MAX_VALUE;
+    int rightRow = row;
+    int rightCol = col + 1;
+    int belowRow = row + 1;
+    int belowCol = col;
+    if (col + 1 < grid[0].length) {
+      hasRight = true;
+      rightValue = grid[row][col + 1];
+    }
+    if (row + 1 < grid.length) {
+      hasBelow = true;
+      belowValue = grid[row + 1][col];
+    }
+        if (hasRight && hasBelow) {
+      if (rightValue < belowValue) {
+        return new Location(rightRow, rightCol);
+      } else {
+        return new Location(belowRow, belowCol);
+      }
+    } else if (hasRight) {
+      return new Location(rightRow, rightCol);
+    } else {
+      return new Location(belowRow, belowCol);
+    }
+   }
+
+
+  
+  // PART B
+  public int sumPath(int row, int col) {
+   int sum = grid[row][col];
+
+    while (row < grid.length - 1 && col < grid[0].length - 1) {
+      Location nextLoc = getNextLoc(row, col);
+      row = nextLoc.getRow();
+      col = nextLoc.getCol();
+      sum += grid[row][col];
+    }
+
+    return sum;
+}
+
+  // added to see the array on screen 
+  public String toString() {
+    return Arrays.deepToString(grid);
+  }
+  
+}
